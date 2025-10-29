@@ -6,5 +6,7 @@ namespace Funcionario_WebAPI.Service.FuncionarioService
     {    
         Task<ServiceResponse<FuncionarioModel>> GetFuncionarioById(int id);
 
+        Task<ServiceResponse<List<FuncionarioModel>>> GetFuncionarios();
+
     }
 }

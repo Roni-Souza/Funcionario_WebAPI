@@ -9,7 +9,7 @@ namespace Funcionario_WebAPI.Service.FuncionarioService
     {
         private readonly ApplicationDbContext _context;
 
-         public FuncionarioService(ApplicationDbContext context)
+        public FuncionarioService(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -40,5 +40,27 @@ namespace Funcionario_WebAPI.Service.FuncionarioService
             return serviceResponse;
         }
 
+        public async Task<ServiceResponse<List<FuncionarioModel>>> GetFuncionarios()
+        {
+            ServiceResponse<List<FuncionarioModel>> serviceResponse = new ServiceResponse<List<FuncionarioModel>>();
+            try
+            {
+                serviceResponse.Dados = _context.Funcionarios.ToList();
+
+                if (serviceResponse.Dados.Count == 0)
+                {
+                    serviceResponse.Mensagem = "Nenhum funcionário encontrado!";
+                    serviceResponse.Sucesso = false;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                serviceResponse.Mensagem = ex.Message;
+                serviceResponse.Sucesso = false;
+            }
+            return serviceResponse;
+
+        }
     }
 }
