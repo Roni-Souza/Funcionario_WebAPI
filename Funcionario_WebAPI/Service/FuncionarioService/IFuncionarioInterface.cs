@@ -8,5 +8,7 @@ namespace Funcionario_WebAPI.Service.FuncionarioService
 
         Task<ServiceResponse<List<FuncionarioModel>>> GetFuncionarios();
 
+        Task<ServiceResponse<List<FuncionarioModel>>> CreateFuncionario(FuncionarioModel novofuncionario);
+
     }
 }

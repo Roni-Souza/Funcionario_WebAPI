@@ -14,6 +14,33 @@ namespace Funcionario_WebAPI.Service.FuncionarioService
             _context = context;
         }
 
+        public async Task<ServiceResponse<List<FuncionarioModel>>> CreateFuncionario(FuncionarioModel novoFuncionario)
+        {
+           ServiceResponse<List<FuncionarioModel>> serviceResponse = new ServiceResponse<List<FuncionarioModel>>();
+            try
+            {
+                if (novoFuncionario == null)
+                {
+                    serviceResponse.Dados = null;
+                    serviceResponse.Mensagem = "Informar dados!";
+                    serviceResponse.Sucesso = false;
+                    return serviceResponse;
+                }
+
+                _context.Add(novoFuncionario);
+                await  _context.SaveChangesAsync();
+
+                serviceResponse.Dados = _context.Funcionarios.ToList();
+
+            }
+            catch (Exception ex)
+            {
+                serviceResponse.Mensagem = ex.Message;
+                serviceResponse.Sucesso = false;
+            }
+            return serviceResponse;
+        }
+
         public async Task<ServiceResponse<FuncionarioModel>> GetFuncionarioById(int id)
         {
             ServiceResponse<FuncionarioModel> serviceResponse = new ServiceResponse<FuncionarioModel>();
@@ -40,7 +67,7 @@ namespace Funcionario_WebAPI.Service.FuncionarioService
             return serviceResponse;
         }
 
-        public async Task<ServiceResponse<List<FuncionarioModel>>> GetFuncionarios()
+        public ServiceResponse<List<FuncionarioModel>> GetFuncionarios()
         {
             ServiceResponse<List<FuncionarioModel>> serviceResponse = new ServiceResponse<List<FuncionarioModel>>();
             try
@@ -61,6 +88,11 @@ namespace Funcionario_WebAPI.Service.FuncionarioService
             }
             return serviceResponse;
 
+        }
+
+        Task<ServiceResponse<List<FuncionarioModel>>> IFuncionarioInterface.GetFuncionarios()
+        {
+            throw new NotImplementedException();
         }
     }
 }
