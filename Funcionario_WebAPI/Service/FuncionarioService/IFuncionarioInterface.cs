@@ -11,5 +11,7 @@ namespace Funcionario_WebAPI.Service.FuncionarioService
         Task<ServiceResponse<List<FuncionarioModel>>> CreateFuncionario(FuncionarioModel novofuncionario);
 
         Task<ServiceResponse<List<FuncionarioModel>>> InativaFuncionario(int id);
+
+        Task<ServiceResponse<List<FuncionarioModel>>> UpdateFuncionario(FuncionarioModel novofuncionario);
     }
 }
