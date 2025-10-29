@@ -67,7 +67,7 @@ namespace Funcionario_WebAPI.Service.FuncionarioService
             return serviceResponse;
         }
 
-        public ServiceResponse<List<FuncionarioModel>> GetFuncionarios()
+        public async Task<ServiceResponse<List<FuncionarioModel>>> GetFuncionarios()
         {
             ServiceResponse<List<FuncionarioModel>> serviceResponse = new ServiceResponse<List<FuncionarioModel>>();
             try
@@ -90,9 +90,35 @@ namespace Funcionario_WebAPI.Service.FuncionarioService
 
         }
 
-        Task<ServiceResponse<List<FuncionarioModel>>> IFuncionarioInterface.GetFuncionarios()
+        public async Task<ServiceResponse<List<FuncionarioModel>>> InativaFuncionario(int id)
         {
-            throw new NotImplementedException();
+            ServiceResponse<List<FuncionarioModel>> serviceResponse = new ServiceResponse<List<FuncionarioModel>>();
+            
+            try
+            {
+                FuncionarioModel funcionario = _context.Funcionarios.FirstOrDefault(x => x.Id == id);
+                if (funcionario == null)
+                {
+                    serviceResponse.Dados = null;
+                    serviceResponse.Mensagem = "Funcionário não encontrado.";
+                    serviceResponse.Sucesso = false;
+                }
+                funcionario.Ativo = false;
+                funcionario.DataDeAlteracao = DateTime.Now.ToLocalTime();
+
+                _context.Funcionarios.Update(funcionario);
+                await _context.SaveChangesAsync();
+
+                serviceResponse.Dados = _context.Funcionarios.ToList();
+
+
+            }
+            catch (Exception ex)
+            {
+                serviceResponse.Mensagem = ex.Message;
+                serviceResponse.Sucesso = false;
+            }
+            return serviceResponse;
         }
     }
 }
