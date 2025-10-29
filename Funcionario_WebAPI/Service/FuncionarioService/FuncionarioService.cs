@@ -41,6 +41,36 @@ namespace Funcionario_WebAPI.Service.FuncionarioService
             return serviceResponse;
         }
 
+        public async Task<ServiceResponse<List<FuncionarioModel>>> DeleteFuncionario(int id)
+        {
+            ServiceResponse<List<FuncionarioModel>> serviceResponse = new ServiceResponse<List<FuncionarioModel>>();
+
+            try
+            {
+                FuncionarioModel funcionario = _context.Funcionarios.FirstOrDefault(x => x.Id == id);
+                
+                if (funcionario == null)
+                {
+                    serviceResponse.Dados = null;
+                    serviceResponse.Mensagem = "Funcionário não encontrado!";
+                    serviceResponse.Sucesso = false;
+
+                    return serviceResponse;
+                }
+
+                _context.Funcionarios.Remove(funcionario);
+                await _context.SaveChangesAsync();
+
+                serviceResponse.Dados = _context.Funcionarios.ToList();
+            }
+            catch(Exception ex)
+            {
+                serviceResponse.Mensagem = ex.Message;
+                serviceResponse.Sucesso = false;
+            }
+            return serviceResponse;
+        }
+
         public async Task<ServiceResponse<FuncionarioModel>> GetFuncionarioById(int id)
         {
             ServiceResponse<FuncionarioModel> serviceResponse = new ServiceResponse<FuncionarioModel>();
@@ -151,5 +181,6 @@ namespace Funcionario_WebAPI.Service.FuncionarioService
             }
             return serviceResponse;
         }
+     
     }
 }
